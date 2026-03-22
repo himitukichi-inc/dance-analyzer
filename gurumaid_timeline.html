@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>穂の国スポーツ新聞 ── 14年の記録 | gurumaid=tiara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --ink-mid: #3d2e18;
+    --ink-light: #7a6a52;
+    --paper: #f5f0e8;
+    --paper-dark: #e8e0d0;
+    --paper-darker: #d4c9b4;
+    --accent-red: #c0392b;
+    --accent-red-dark: #8b1a10;
+    --accent-gold: #b8860b;
+    --accent-gold-light: #d4a843;
+    --rule: #8b7355;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── ノイズテクスチャ ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── ヘッダー新聞風 ── */
+  .masthead {
+    position: relative;
+    z-index: 10;
+    border-bottom: 4px double var(--ink-mid);
+    padding: 0;
+    background: var(--paper);
+  }
+
+  .masthead-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 40px 8px;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: 0.05em;
+  }
+
+  .masthead-logo-wrap {
+    text-align: center;
+    padding: 20px 40px 16px;
+    position: relative;
+  }
+
+  .masthead-logo-wrap::before,
+  .masthead-logo-wrap::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 260px);
+    height: 1px;
+    background: var(--rule);
+  }
+  .masthead-logo-wrap::before { left: 40px; }
+  .masthead-logo-wrap::after { right: 40px; }
+
+  .paper-name-en {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    color: var(--ink-light);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .paper-name-ja {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1;
+    display: block;
+    letter-spacing: -0.02em;
+  }
+
+  .paper-tagline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    color: var(--ink-light);
+    margin-top: 8px;
+    letter-spacing: 0.1em;
+    display: block;
+  }
+
+  /* ── 赤いリボン見出し ── */
+  .ribbon-header {
+    background: var(--accent-red);
+    color: #fff;
+    text-align: center;
+    padding: 10px 40px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+  }
+
+  /* ── イントロ ── */
+  .intro {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 48px auto 0;
+    padding: 0 40px;
+    text-align: center;
+  }
+
+  .intro-lead {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    line-height: 2;
+    color: var(--ink-mid);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 20px 0;
+    margin-bottom: 16px;
+  }
+
+  .intro-credit {
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── 年表コンテナ ── */
+  .timeline-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 60px auto;
+    padding: 0 24px;
+  }
+
+  /* 中央縦線 */
+  .timeline-wrap::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+    transform: translateX(-50%);
+  }
+
+  /* ── 章ヘッダー ── */
+  .chapter {
+    position: relative;
+    text-align: center;
+    margin: 60px 0 40px;
+  }
+
+  .chapter-inner {
+    display: inline-block;
+    background: var(--paper);
+    padding: 0 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .chapter-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--ink-light);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .chapter-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* ── 年表アイテム ── */
+  .tl-item {
+    display: grid;
+    grid-template-columns: 1fr 48px 1fr;
+    gap: 0 20px;
+    margin-bottom: 40px;
+    align-items: start;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .tl-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 左カード */
+  .tl-left {
+    text-align: right;
+  }
+
+  /* 右カード */
+  .tl-right {
+    text-align: left;
+  }
+
+  /* 偶数は右に内容 */
+  .tl-item.right .tl-left { order: 1; }
+  .tl-item.right .tl-center { order: 2; }
+  .tl-item.right .tl-right { order: 3; }
+
+  .tl-item.left .tl-card { margin-left: auto; }
+
+  /* センター（ドット・年号） */
+  .tl-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding-top: 4px;
+  }
+
+  .tl-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--ink-mid);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .tl-dot.special {
+    background: var(--accent-red);
+    border-color: var(--accent-red-dark);
+    width: 22px;
+    height: 22px;
+  }
+
+  .tl-year {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-light);
+    letter-spacing: 0.05em;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  /* カード本体 */
+  .tl-card {
+    background: var(--paper);
+    border: 1px solid var(--paper-darker);
+    padding: 14px 18px;
+    max-width: 380px;
+    position: relative;
+    box-shadow: 2px 3px 0 var(--paper-darker);
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .tl-card:hover {
+    box-shadow: 4px 5px 0 var(--paper-darker);
+    transform: translate(-1px, -1px);
+  }
+
+  .tl-card.special {
+    border-color: var(--accent-red);
+    border-width: 2px;
+  }
+
+  /* 号外バッジ */
+  .badge-gougai {
+    display: inline-block;
+    background: var(--accent-red);
+    color: #fff;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .badge-anniversary {
+    display: inline-block;
+    background: var(--accent-gold);
+    color: #fff;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .tl-headline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .tl-sub {
+    font-size: 11px;
+    color: var(--ink-light);
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .tl-img-placeholder {
+    background: var(--paper-dark);
+    border: 1px dashed var(--paper-darker);
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--ink-light);
+    letter-spacing: 0.05em;
+    margin-top: 8px;
+  }
+
+  .tl-note-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--accent-red);
+    text-decoration: none;
+    margin-top: 8px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .tl-note-link:hover {
+    border-bottom-color: var(--accent-red);
+  }
+
+  /* 空カード（反対側） */
+  .tl-empty { min-height: 20px; }
+
+  /* ── 最終ライン ── */
+  .timeline-end {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    margin: 40px 0 80px;
+  }
+
+  .timeline-end-inner {
+    display: inline-block;
+    background: var(--paper);
+    padding: 0 32px;
+  }
+
+  .timeline-end-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .timeline-end-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13px;
+    color: var(--ink-light);
+    letter-spacing: 0.15em;
+  }
+
+  /* ── フッター ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 4px double var(--ink-mid);
+    padding: 32px 40px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .footer-sub {
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+
+  /* ── レスポンシブ ── */
+  @media (max-width: 680px) {
+    .masthead-top { padding: 10px 16px; font-size: 10px; }
+    .masthead-logo-wrap { padding: 16px 16px 12px; }
+    .masthead-logo-wrap::before, .masthead-logo-wrap::after { display: none; }
+    .paper-name-ja { font-size: 28px; }
+    .intro { padding: 0 20px; }
+    .timeline-wrap { padding: 0 12px; }
+    .timeline-wrap::before { left: 20px; }
+    .tl-item {
+      grid-template-columns: 40px 1fr;
+      grid-template-rows: auto;
+    }
+    .tl-item .tl-center { order: 1; align-items: flex-start; padding-top: 6px; }
+    .tl-item .tl-right,
+    .tl-item .tl-left,
+    .tl-item.right .tl-right,
+    .tl-item.right .tl-left { order: 2; text-align: left; grid-column: 2; }
+    .tl-empty { display: none; }
+    .tl-year { writing-mode: horizontal-tb; font-size: 11px; }
+    .tl-card { max-width: 100%; }
+    .chapter { margin: 40px 0 24px; }
+    .masthead-logo-wrap::before, .masthead-logo-wrap::after { width: 0; }
+    .ribbon-header { font-size: 12px; padding: 8px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── マストヘッド ── -->
+<header class="masthead">
+  <div class="masthead-top">
+    <span>株式会社秘密基地HONOKUNI 公式アーカイブ</span>
+    <span>創刊 2012年 ── 現在も発行中</span>
+  </div>
+  <div class="masthead-logo-wrap">
+    <span class="paper-name-en">HONOKUNI SPORTS NEWS</span>
+    <span class="paper-name-ja">穂の国スポーツ新聞</span>
+    <span class="paper-tagline">── この景色をわすれない ──</span>
+  </div>
+  <div class="ribbon-header">gurumaid=tiara &amp; ほのくに各グループ　14年の記録</div>
+</header>
+
+<!-- ── イントロ ── -->
+<div class="intro">
+  <p class="intro-lead">
+    2012年の誕生から現在まで、すべてのライブ・イベントの記録が<br>
+    「穂の国スポーツ新聞」として残されている。<br>
+    撮影・制作：担当カメラマン氏が毎回手がける新聞形式のアーカイブ。<br>
+    各記事はnoteで全文公開中。
+  </p>
+  <p class="intro-credit">Photography &amp; Design : HONOKUNI SPORTS NEWS 専属カメラマン</p>
+</div>
+
+<!-- ── 年表 ── -->
+<div class="timeline-wrap">
+
+  <!-- 第1章 -->
+  <div class="chapter">
+    <div class="chapter-inner">
+      <span class="chapter-num">CHAPTER 01</span>
+      <span class="chapter-title">誕生期 2012〜2014 ── ほの国娘、始動</span>
+    </div>
+  </div>
+
+  <div class="tl-item left" data-delay="0">
+    <div class="tl-left">
+      <div class="tl-card">
+        <span class="badge-anniversary">創刊号</span>
+        <div class="tl-headline">ほの国娘ぐるめいど隊、産声をあげる</div>
+        <div class="tl-sub">東三河・豊橋エリアを拠点とした地域密着型アイドルとして活動スタート。穂の国スポーツ新聞、第1号発行。</div>
+        <div class="tl-img-placeholder">[ 創刊号 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+    <div class="tl-center">
+      <div class="tl-dot special"></div>
+      <div class="tl-year">2012</div>
+    </div>
+    <div class="tl-right tl-empty"></div>
+  </div>
+
+  <div class="tl-item right" data-delay="100">
+    <div class="tl-left tl-empty"></div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2013</div>
+    </div>
+    <div class="tl-right">
+      <div class="tl-card">
+        <div class="tl-headline">地域イベント出演、認知拡大へ</div>
+        <div class="tl-sub">商業施設・地域イベントへの出演を重ね、東三河に根を張る活動が本格化。特典会文化も始まる。</div>
+        <div class="tl-img-placeholder">[ 2013年 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-item left" data-delay="0">
+    <div class="tl-left">
+      <div class="tl-card">
+        <div class="tl-headline">初の自主企画ライブ開催</div>
+        <div class="tl-sub">ライブハウスでの自主企画が定着しはじめ、固定ファン層が育ちはじめる。</div>
+        <div class="tl-img-placeholder">[ 2014年 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2014</div>
+    </div>
+    <div class="tl-right tl-empty"></div>
+  </div>
+
+  <!-- 第2章 -->
+  <div class="chapter">
+    <div class="chapter-inner">
+      <span class="chapter-num">CHAPTER 02</span>
+      <span class="chapter-title">拡大期 2015〜2017 ── 地域へ、街へ</span>
+    </div>
+  </div>
+
+  <div class="tl-item right" data-delay="0">
+    <div class="tl-left tl-empty"></div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2015</div>
+    </div>
+    <div class="tl-right">
+      <div class="tl-card">
+        <div class="tl-headline">ホコ天企画、3万人動員</div>
+        <div class="tl-sub">歩行者天国を使った大型イベントで約3万人を動員。地域アイドルとしての存在感を示す。</div>
+        <div class="tl-img-placeholder">[ ホコ天3万人動員 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-item left" data-delay="100">
+    <div class="tl-left">
+      <div class="tl-card">
+        <div class="tl-headline">メディア掲載相次ぐ ── 中日・朝日・東愛知新聞</div>
+        <div class="tl-sub">中日新聞・朝日新聞・東愛知新聞に相次いで掲載。地域における認知が飛躍的に拡大した年。</div>
+        <div class="tl-img-placeholder">[ 新聞掲載 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2016</div>
+    </div>
+    <div class="tl-right tl-empty"></div>
+  </div>
+
+  <div class="tl-item right" data-delay="0">
+    <div class="tl-left tl-empty"></div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2017</div>
+    </div>
+    <div class="tl-right">
+      <div class="tl-card">
+        <div class="tl-headline">六条潟・田植えイベント ── 地域との深化</div>
+        <div class="tl-sub">地元の自然・農業イベントとのコラボが実現。アイドルと地域文化の融合が独自のブランドを形成しはじめる。</div>
+        <div class="tl-img-placeholder">[ 六条潟・田植えイベント JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第3章 -->
+  <div class="chapter">
+    <div class="chapter-inner">
+      <span class="chapter-num">CHAPTER 03</span>
+      <span class="chapter-title">転換期 2018〜2020 ── ぐるティアへ</span>
+    </div>
+  </div>
+
+  <div class="tl-item left" data-delay="0">
+    <div class="tl-left">
+      <div class="tl-card">
+        <span class="badge-anniversary">転換点</span>
+        <div class="tl-headline">gurumaid=tiara へ ── 「戦う姫」世界観へ</div>
+        <div class="tl-sub">グループ名・コンセプトの刷新。ご当地アイドルから世界観型ライブアイドルへの大きな転換点となった年。</div>
+        <div class="tl-img-placeholder">[ 2018年 転換号 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+    <div class="tl-center">
+      <div class="tl-dot special"></div>
+      <div class="tl-year">2018</div>
+    </div>
+    <div class="tl-right tl-empty"></div>
+  </div>
+
+  <div class="tl-item right" data-delay="100">
+    <div class="tl-left tl-empty"></div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2019</div>
+    </div>
+    <div class="tl-right">
+      <div class="tl-card">
+        <div class="tl-headline">新体制、始動</div>
+        <div class="tl-sub">新メンバーを迎え新たな体制がスタート。世界観・楽曲・ライブ構成の再構築が進む。</div>
+        <div class="tl-img-placeholder">[ 2019年 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-item left" data-delay="0">
+    <div class="tl-left">
+      <div class="tl-card">
+        <div class="tl-headline">困難な年、それでも続けた舞台</div>
+        <div class="tl-sub">社会的制約のなかでもライブ・活動を継続。逆境の中でメンバーとファンの絆が深まった。</div>
+        <div class="tl-img-placeholder">[ 2020年 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2020</div>
+    </div>
+    <div class="tl-right tl-empty"></div>
+  </div>
+
+  <!-- 第4章 -->
+  <div class="chapter">
+    <div class="chapter-inner">
+      <span class="chapter-num">CHAPTER 04</span>
+      <span class="chapter-title">深化期 2021〜2023 ── 世界観の確立</span>
+    </div>
+  </div>
+
+  <div class="tl-item right" data-delay="0">
+    <div class="tl-left tl-empty"></div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2021</div>
+    </div>
+    <div class="tl-right">
+      <div class="tl-card">
+        <div class="tl-headline">周年ライブ ── ストーリーとして見せるステージへ</div>
+        <div class="tl-sub">周年ライブのストーリー性が確立。セトリ・演出・MC・衣装が一体となった舞台づくりへ進化。</div>
+        <div class="tl-img-placeholder">[ 2021年 周年ライブ JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-item left" data-delay="100">
+    <div class="tl-left">
+      <div class="tl-card">
+        <div class="tl-headline">しゃるぷり・さくらせぞん始動</div>
+        <div class="tl-sub">グループ体制の拡充。SNS戦略グループ・情緒派グループが加わりほのくに全体の表現の幅が広がる。</div>
+        <div class="tl-img-placeholder">[ 2022年 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2022</div>
+    </div>
+    <div class="tl-right tl-empty"></div>
+  </div>
+
+  <div class="tl-item right" data-delay="0">
+    <div class="tl-left tl-empty"></div>
+    <div class="tl-center">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2023</div>
+    </div>
+    <div class="tl-right">
+      <div class="tl-card">
+        <div class="tl-headline">このわ研修生、舞台へ</div>
+        <div class="tl-sub">育成ユニット「このわ研修生」が定期ライブに登場。次世代メンバーへの継承が始まる。</div>
+        <div class="tl-img-placeholder">[ 2023年 JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第5章 -->
+  <div class="chapter">
+    <div class="chapter-inner">
+      <span class="chapter-num">CHAPTER 05</span>
+      <span class="chapter-title">現在進行形 2024〜 ── 戦う姫たちの今</span>
+    </div>
+  </div>
+
+  <div class="tl-item left" data-delay="0">
+    <div class="tl-left">
+      <div class="tl-card">
+        <span class="badge-anniversary">13th</span>
+        <div class="tl-headline">13周年ライブ ── 東三河の誇り、全力で</div>
+        <div class="tl-sub">PLATホールに多くのファンが集まり、13年の歴史を総括する舞台が実現。全メンバーの歌唱とアンコールが深夜まで続いた。</div>
+        <div class="tl-img-placeholder">[ 2024年 13th JPG ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+    <div class="tl-center">
+      <div class="tl-dot special"></div>
+      <div class="tl-year">2024</div>
+    </div>
+    <div class="tl-right tl-empty"></div>
+  </div>
+
+  <div class="tl-item right" data-delay="100">
+    <div class="tl-left tl-empty"></div>
+    <div class="tl-center">
+      <div class="tl-dot special"></div>
+      <div class="tl-year">2026.2</div>
+    </div>
+    <div class="tl-right">
+      <div class="tl-card special">
+        <span class="badge-gougai">号外</span>
+        <div class="tl-headline">このわ研修生・りおんさん デビュー ── 13年間の集大成、見事に結実</div>
+        <div class="tl-sub">穂の国とよはし芸術劇場PLAT ／ 3グループ合同「この景色をわすれない2026」。3年間の修行の末、りおんさんがデビューを果たした夜。</div>
+        <div class="tl-img-placeholder">[ 2026.2.22 JPG ── りおんさんデビュー号 ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-item left" data-delay="100">
+    <div class="tl-left">
+      <div class="tl-card special">
+        <span class="badge-gougai">号外</span>
+        <div class="tl-headline">黄ノ瀬ななみ、一人でステージを守る ── 「魂は6人」</div>
+        <div class="tl-sub">浜松・KANEP。4日、突如一人での出演に。13年半の歴史上初のソロステージ。「ステージには1人、魂は6人」──ファンと共にその夜を乗り越えた。</div>
+        <div class="tl-img-placeholder">[ 2026.3.4 JPG ── ななみソロ号外 ]</div>
+        <a class="tl-note-link" href="#" onclick="return false;">note で読む →</a>
+      </div>
+    </div>
+    <div class="tl-center">
+      <div class="tl-dot special"></div>
+      <div class="tl-year">2026.3</div>
+    </div>
+    <div class="tl-right tl-empty"></div>
+  </div>
+
+  <!-- エンド -->
+  <div class="timeline-end">
+    <div class="timeline-end-inner">
+      <div class="timeline-end-dot"></div>
+      <div class="timeline-end-text">記録は今日も、続いている</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── フッター ── -->
+<footer>
+  <div class="footer-logo">穂の国スポーツ新聞</div>
+  <div class="footer-sub">
+    撮影・制作 ／ HONOKUNI SPORTS NEWS 専属カメラマン<br>
+    アーカイブ企画・運営 ／ 株式会社秘密基地HONOKUNI<br>
+    全記録はnoteマガジン「穂の国スポーツ新聞 全記録」で公開中
+  </div>
+</footer>
+
+<script>
+  const items = document.querySelectorAll('.tl-item');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const delay = parseInt(e.target.dataset.delay || 0);
+        setTimeout(() => e.target.classList.add('visible'), delay);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  items.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
